@@ -4,6 +4,20 @@ import { useState, useEffect } from 'react';
 import { databases, DATABASE_ID, COLLECTION_ID, Query, account } from '../../lib/appwrite';
 import { useAuth } from '../../lib/auth';
 
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+
 export default function CompanyDashboard() {
   const { user, setUser } = useAuth(); // 🔑 Auth context
   const company = 'demo'; // Hardcoded company name
@@ -74,25 +88,62 @@ export default function CompanyDashboard() {
   // Not logged in → show login form
   if (!user)
     return (
-      <div>
-        <h1>Login to {company.toUpperCase()} Dashboard</h1>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <br />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <br />
-        <button onClick={login}>Login</button>
-      </div>
+      <Card className="w-full sm:w-auto max-w-sm">
+        <CardHeader>
+          <CardTitle>Login to your account</CardTitle>
+          <CardDescription>
+            Enter your email below to login to your account
+          </CardDescription>
+          <CardAction>
+            <Button variant="link">Sign Up</Button>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault(); // prevent page reload
+              login();
+            }}
+          >
+            <div className="flex flex-col gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="company@pesaview.com"
+                  required
+                  value={email} // controlled input
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center">
+                  <Label htmlFor="password">Password</Label>
+                  <a
+                    href="#"
+                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                  >
+                    Forgot your password?
+                  </a>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  value={password} // controlled input
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+            <Button type="submit" className="w-full mt-4">
+              Login
+            </Button>
+          </form>
+
+        </CardContent>
+        
+      </Card>
     );
 
   // Dashboard view
